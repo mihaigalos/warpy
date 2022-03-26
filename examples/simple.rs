@@ -2,6 +2,8 @@ use std::io;
 
 #[tokio::main]
 async fn main() -> io::Result<()> {
-    warpy::server::run(".".to_string(), [127, 0, 0, 1], 8082).await?;
+    let footer = format!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
+
+    warpy::server::run(".".to_string(), [0, 0, 0, 0], 8082, footer).await?;
     Ok(())
 }

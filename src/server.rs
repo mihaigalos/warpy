@@ -11,17 +11,17 @@ use warp::reject::not_found;
 use warp::reply::{html, Reply};
 use warp::Filter;
 
-pub async fn run(folder: String, ip: [u8; 4], port: u16) -> io::Result<()> {
+pub async fn run(folder: String, ip: [u8; 4], port: u16, footer: String) -> io::Result<()> {
     let ip_addr = IpAddr::from(ip);
     let socket_addr = SocketAddr::from((ip_addr, port));
-    let handle = tokio::spawn(warp::serve(routes(folder)).bind(socket_addr));
+    let handle = tokio::spawn(warp::serve(routes(folder, footer)).bind(socket_addr));
     ctrl_c().await?;
     handle.abort();
     handle.await?;
     Ok(())
 }
 
-pub fn routes(folder: String) -> BoxedFilter<(impl Reply,)> {
+pub fn routes(folder: String, footer: String) -> BoxedFilter<(impl Reply,)> {
     let logging = warp::log::custom(|info| {
         debug!("Request: '{}',\tStatus: '{}'", info.path(), info.status())
     });
@@ -29,13 +29,17 @@ pub fn routes(folder: String) -> BoxedFilter<(impl Reply,)> {
     let handle_files = warp::fs::dir(folder.clone());
     let handle_directories = warp::get()
         .and(warp::path::full())
-        .and_then(move |route| path_to_html(folder.clone(), route))
+        .and_then(move |route| path_to_html(folder.clone(), route, footer.clone()))
         .map(html);
 
     handle_files.or(handle_directories).with(logging).boxed()
 }
 
-async fn path_to_html(folder: String, route: FullPath) -> Result<String, warp::reject::Rejection> {
+async fn path_to_html(
+    folder: String,
+    route: FullPath,
+    footer: String,
+) -> Result<String, warp::reject::Rejection> {
     let path = PathBuf::from(folder.clone()).join(&route.as_str()[1..]);
 
     let content = HtmlPage::new()
@@ -47,6 +51,10 @@ async fn path_to_html(folder: String, route: FullPath) -> Result<String, warp::r
                 .with_container(
                     links_container(folder, path.as_path(), &route).ok_or_else(not_found)?,
                 ),
+        )
+        .with_container(
+            Container::new(ContainerType::Footer)
+                .with_preformatted_attr(footer, [("id", "footer")]),
         )
         .to_html_string();
 

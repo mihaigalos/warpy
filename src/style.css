@@ -54,3 +54,12 @@ svg {
     grid-template-columns: 1;
     justify-items: center;
 }
+
+#footer {
+    font-family: monospace;
+    font-size: normal;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
