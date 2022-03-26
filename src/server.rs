@@ -39,7 +39,7 @@ async fn path_to_html(folder: String, route: FullPath) -> Result<String, warp::r
     let path = PathBuf::from(folder.clone()).join(&route.as_str()[1..]);
 
     let content = HtmlPage::new()
-        .with_style(include_str!("styles.css"))
+        .with_style(include_str!("style.css"))
         .with_container(
             Container::new(ContainerType::Main)
                 .with_attributes([("class", "border-box")])
