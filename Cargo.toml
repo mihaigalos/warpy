@@ -1,0 +1,19 @@
+[package]
+name = "warpy"
+version = "0.0.1"
+edition = "2021"
+description = "A thin warp wrapper for serving folders over http."
+categories = [
+    "command-line-utilities",
+    "network-programming",
+    "web-programming::http-server"
+]
+keywords = [
+    "cli",
+    "download",
+    "resume",
+]
+repository = "https://github.com/mihaigalos/warpy"
+license = "MIT"
+
+[dependencies]
