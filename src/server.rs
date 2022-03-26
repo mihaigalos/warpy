@@ -84,7 +84,7 @@ fn mixin_files(folder: String, path: &Path, mut links: Container) -> Option<Cont
         .collect();
     entries.sort_by_cached_key(|(_, name, _)| name.to_string());
     for (path, name, icon) in entries {
-        let link_text = format!("{}<p class=\"text\">{}</p>", icon, name);
+        let link_text = format!("{}<p class=\"text\">{}</p>\n", icon, name);
         links.add_link_attr(path, link_text, content_attrs);
     }
     Some(links)
@@ -99,7 +99,7 @@ fn mixin_folders(folder: String, path: &Path, mut links: Container) -> Option<Co
         .collect();
     entries.sort_by_cached_key(|(_, name, _)| name.to_string());
     for (path, name, icon) in entries {
-        let link_text = format!("{}<p class=\"text\">{}</p>", icon, name);
+        let link_text = format!("{}<p class=\"text\">{}</p>\n", icon, name);
         links.add_link_attr(path, link_text, content_attrs);
     }
 
