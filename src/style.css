@@ -29,7 +29,6 @@ svg {
 
 .content:hover {
     border: 1px solid #999999;
-    text-decoration: underline;
 }
 
 .border-box {
