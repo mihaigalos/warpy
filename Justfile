@@ -8,7 +8,10 @@ _start:
 _stop:
     pkill simple
 
-test: _start && _stop
+build:
+    cargo build
+
+test: build _start && _stop
     #!/bin/bash
     function err() {
         echo -e "\e[1;31m${@}\e[0m" >&2
