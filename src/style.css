@@ -36,16 +36,17 @@ svg {
     border-radius: 10px;
     border: 2px solid #999999;
     margin: 25px auto;
-    max-width: 1200px;
+    max-width: 90%;
     padding: 10px;
-    width: 80%;
+    width: 90%;
 }
 
 #header {
     font-family: monospace;
     font-size: x-large;
     margin: 0;
-    padding: 10px;
+    padding-left: 5%;
+    padding-bottom: 1%;
 }
 
 #wrapper {
