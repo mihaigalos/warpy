@@ -6,7 +6,7 @@ port := "8082"
 
 _start:
     cargo run --example simple &
-    sleep 10
+    sleep 10s
 
 _stop:
     pkill simple
