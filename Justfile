@@ -24,5 +24,5 @@ test: _start && _stop
     pushd $(mktemp -d)
     wget 127.0.0.1:8082/test/demofile
     sha_actual=$(sha256sum demofile | cut -d' ' -f1)
-    [ "$sha_input" = "$sha_output" ] && ok || err "ERROR: input and output SHA256s don't match."
+    [ "$sha_actual" = "$sha_expected" ] && ok || err "ERROR: input and output SHA256s don't match."
     popd
