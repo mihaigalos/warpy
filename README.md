@@ -1,5 +1,7 @@
 # Warpy
 
+![example](screenshots/warpy.png)
+
 A thin warp wrapper for serving folders over http. 
 
 ## Usage
