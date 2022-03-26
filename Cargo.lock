@@ -1160,7 +1160,7 @@ dependencies = [
 
 [[package]]
 name = "warpy"
-version = "0.0.4"
+version = "0.1.0"
 dependencies = [
  "build_html",
  "env_logger",
