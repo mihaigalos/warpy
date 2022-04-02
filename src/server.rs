@@ -1,6 +1,6 @@
 use build_html::*;
+use chrono;
 use local_ipaddress;
-use log::debug;
 use std::fs::read_dir;
 use std::io;
 use std::net::{IpAddr, SocketAddr};
@@ -42,7 +42,15 @@ pub async fn run_auto_port(folder: String, ip: [u8; 4], footer: String) -> io::R
 
 pub fn routes(folder: String, footer: String) -> BoxedFilter<(impl Reply,)> {
     let logging = warp::log::custom(|info| {
-        debug!("Request: '{}',\tStatus: '{}'", info.path(), info.status())
+        println!(
+            "{} - - {} [{:?}] {} {} {}",
+            info.remote_addr().unwrap().ip(),
+            info.status().as_u16(),
+            chrono::offset::Local::now(),
+            info.path(),
+            info.referer().unwrap_or("NoReferer"),
+            info.user_agent().unwrap()
+        );
     });
 
     let handle_files = warp::fs::dir(folder.clone());
