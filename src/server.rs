@@ -1,4 +1,5 @@
 use build_html::*;
+use local_ipaddress;
 use log::debug;
 use std::fs::read_dir;
 use std::io;
@@ -11,10 +12,28 @@ use warp::reject::not_found;
 use warp::reply::{html, Reply};
 use warp::Filter;
 
+use crate::port::next_port_in_range;
+
 pub async fn run(folder: String, ip: [u8; 4], port: u16, footer: String) -> io::Result<()> {
     let ip_addr = IpAddr::from(ip);
     let socket_addr = SocketAddr::from((ip_addr, port));
     let handle = tokio::spawn(warp::serve(routes(folder, footer)).bind(socket_addr));
+    ctrl_c().await?;
+    handle.abort();
+    handle.await?;
+    Ok(())
+}
+
+pub async fn run_auto_port(folder: String, ip: [u8; 4], footer: String) -> io::Result<()> {
+    let ip_addr = IpAddr::from(ip);
+    let port = next_port_in_range(8080..9000).expect("Cannot open any port in requested range.");
+    let socket_addr = SocketAddr::from((ip_addr, port));
+    let handle = tokio::spawn(warp::serve(routes(folder, footer)).bind(socket_addr));
+    println!(
+        "Serving on: http://{}:{}",
+        local_ipaddress::get().unwrap(),
+        port
+    );
     ctrl_c().await?;
     handle.abort();
     handle.await?;
