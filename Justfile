@@ -16,14 +16,9 @@ build:
 
 test: build _start && _stop
     #!/bin/bash
-    function err() {
-        echo -e "\e[1;31m${@}\e[0m" >&2
-        exit 1
-    }
-
-    function ok() {
-        echo -e "\e[1;32mOK\e[0m"
-    }
+    err() { echo -e "\e[1;31m${@}\e[0m" >&2; exit 1; }
+    ok() { echo -e "\e[1;32mOK\e[0m"; }
+    highlight() { echo -en "\e[1;37m${@}\e[0m"; }
 
     sha_expected=c87fc1505070fe84c9c9f745b303d6cabd9cacf8e2aa65ddd854d1b81d4c8a72
 
