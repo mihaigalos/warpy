@@ -13,6 +13,7 @@ use warp::reply::{html, Reply};
 use warp::Filter;
 
 use crate::certificate::new_certificate;
+use crate::constants::*;
 use crate::port::next_port_in_range;
 
 pub async fn run(
@@ -34,8 +35,8 @@ pub async fn run(
         true => tokio::spawn(
             warp::serve(routes(folder, footer))
                 .tls()
-                .cert_path("/tmp/warpy.pem")
-                .key_path("/tmp/warpy.key")
+                .cert_path(PEM_FILE)
+                .key_path(KEY_FILE)
                 .bind(socket_addr),
         ),
         false => tokio::spawn(warp::serve(routes(folder, footer)).bind(socket_addr)),
