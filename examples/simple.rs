@@ -4,6 +4,6 @@ use std::io;
 async fn main() -> io::Result<()> {
     let footer = format!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
 
-    warpy::server::run(".".to_string(), [0, 0, 0, 0], 8082, footer).await?;
+    warpy::server::run(".".to_string(), [0, 0, 0, 0], footer, Some(8082), false).await?;
     Ok(())
 }
