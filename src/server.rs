@@ -7,6 +7,7 @@ use std::net::{IpAddr, SocketAddr};
 use std::path::{Path, PathBuf};
 use tokio::signal::ctrl_c;
 use warp::filters::BoxedFilter;
+use warp::log::Info;
 use warp::path::FullPath;
 use warp::reject::not_found;
 use warp::reply::{html, Reply};
@@ -31,15 +32,29 @@ pub async fn run(
     let socket_addr = SocketAddr::from((ip_addr, port));
 
     new_certificate(local_ipaddress::get().unwrap(), port);
+
+    let logging = warp::log::custom(|info| {
+        println!(
+            "{} - - {} [{:?}] {} {} {}",
+            info.remote_addr().unwrap().ip(),
+            info.status().as_u16(),
+            chrono::offset::Local::now(),
+            info.path(),
+            info.referer().unwrap_or("NoReferer"),
+            info.user_agent().unwrap()
+        );
+    });
+
     let handle = match has_tls {
         true => tokio::spawn(
-            warp::serve(routes(folder, footer))
+            warp::serve(routes(folder, footer, logging))
                 .tls()
                 .cert_path(PEM_FILE)
                 .key_path(KEY_FILE)
                 .bind(socket_addr),
         ),
-        false => tokio::spawn(warp::serve(routes(folder, footer)).bind(socket_addr)),
+
+        false => tokio::spawn(warp::serve(routes(folder, footer, logging)).bind(socket_addr)),
     };
 
     if has_tls {
@@ -62,19 +77,14 @@ pub async fn run(
     Ok(())
 }
 
-pub fn routes(folder: String, footer: String) -> BoxedFilter<(impl Reply,)> {
-    let logging = warp::log::custom(|info| {
-        println!(
-            "{} - - {} [{:?}] {} {} {}",
-            info.remote_addr().unwrap().ip(),
-            info.status().as_u16(),
-            chrono::offset::Local::now(),
-            info.path(),
-            info.referer().unwrap_or("NoReferer"),
-            info.user_agent().unwrap()
-        );
-    });
-
+pub fn routes<F>(
+    folder: String,
+    footer: String,
+    logging: warp::filters::log::Log<F>,
+) -> BoxedFilter<(impl Reply,)>
+where
+    F: Fn(Info<'_>) + Copy + std::marker::Send + std::marker::Sync + 'static,
+{
     let handle_files = warp::fs::dir(folder.clone());
     let handle_directories = warp::get()
         .and(warp::path::full())
