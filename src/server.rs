@@ -33,7 +33,7 @@ pub async fn run(
 
     new_certificate(local_ipaddress::get().unwrap(), port);
 
-    let logging = warp::log::custom(|info| {
+    let logger = warp::log::custom(|info| {
         println!(
             "{} - - {} [{:?}] {} {} {}",
             info.remote_addr().unwrap().ip(),
@@ -47,14 +47,14 @@ pub async fn run(
 
     let handle = match has_tls {
         true => tokio::spawn(
-            warp::serve(routes(folder, footer, logging))
+            warp::serve(routes(folder, footer, logger))
                 .tls()
                 .cert_path(PEM_FILE)
                 .key_path(KEY_FILE)
                 .bind(socket_addr),
         ),
 
-        false => tokio::spawn(warp::serve(routes(folder, footer, logging)).bind(socket_addr)),
+        false => tokio::spawn(warp::serve(routes(folder, footer, logger)).bind(socket_addr)),
     };
 
     if has_tls {
@@ -80,7 +80,7 @@ pub async fn run(
 pub fn routes<F>(
     folder: String,
     footer: String,
-    logging: warp::filters::log::Log<F>,
+    logger: warp::filters::log::Log<F>,
 ) -> BoxedFilter<(impl Reply,)>
 where
     F: Fn(Info<'_>) + Copy + std::marker::Send + std::marker::Sync + 'static,
@@ -91,7 +91,7 @@ where
         .and_then(move |route| path_to_html(folder.clone(), route, footer.clone()))
         .map(html);
 
-    handle_files.or(handle_directories).with(logging).boxed()
+    handle_files.or(handle_directories).with(logger).boxed()
 }
 
 async fn path_to_html(
