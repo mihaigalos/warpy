@@ -1,7 +1,5 @@
 # Warpy
-[![CI](https://github.com/mihaigalos/warpy/actions/workflows/ci.yaml/badge.svg)](https://github.com/mihaigalos/warpy/actions/workflows/ci.yaml)
-[![crates.io](https://img.shields.io/crates/d/warpy.svg)](https://crates.io/crates/warpy)
-[![LoC](https://tokei.rs/b1/github/mihaigalos/warpy)](https://github.com/mihaigalos/warpy)
+[![CI](https://github.com/mihaigalos/warpy/actions/workflows/ci.yaml/badge.svg)](https://github.com/mihaigalos/warpy/actions/workflows/ci.yaml) [![crates.io](https://img.shields.io/crates/d/warpy.svg)](https://crates.io/crates/warpy) [![LoC](https://tokei.rs/b1/github/mihaigalos/warpy)](https://github.com/mihaigalos/warpy)
 
 A thin [warp](https://github.com/seanmonstar/warp) wrapper for serving folders over http. 
 
