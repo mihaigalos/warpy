@@ -13,6 +13,7 @@ use warp::reject::not_found;
 use warp::reply::{html, Reply};
 use warp::Filter;
 
+use crate::auth_n::AuthN;
 use crate::certificate::new_certificate;
 use crate::constants::*;
 use crate::port::next_port_in_range;
@@ -54,7 +55,8 @@ pub async fn run(
                 .bind(socket_addr),
         ),
 
-        false => tokio::spawn(warp::serve(routes(folder, footer, logger)).bind(socket_addr)),
+        //false => tokio::spawn(warp::serve(routes(folder, footer, logger)).bind(socket_addr)),
+        false => tokio::spawn(warp::serve(AuthN::new(true).await.routes()).bind(socket_addr)),
     };
 
     if has_tls {

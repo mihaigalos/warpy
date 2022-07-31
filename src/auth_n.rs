@@ -25,7 +25,7 @@ impl AuthN {
             db: Arc::new(Mutex::new(HashMap::<String, User>::new())),
         }
     }
-    pub async fn run(&'static self, can_register: bool) -> BoxedFilter<(impl Reply + 'static)> {
+    pub async fn routes(&'static self) -> BoxedFilter<(impl Reply + 'static)> {
         let db = warp::any().map(move || Arc::clone(&self.db));
 
         let login = warp::post()
@@ -34,7 +34,7 @@ impl AuthN {
             .and(db.clone())
             .and_then(AuthN::login);
 
-        if can_register {
+        if self.can_register {
             let register = warp::post()
                 .and(warp::path("register"))
                 .and(warp::body::json())
