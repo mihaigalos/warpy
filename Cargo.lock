@@ -79,9 +79,9 @@ dependencies = [
 
 [[package]]
 name = "build_html"
-version = "2.0.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e121f1569e70b069135a0768a6b62a16c9c0eeaba92815a4baa6fdb93a97ec79"
+checksum = "aa8ffb62af7b0911893e2d6126891b2a018e387078fa5d855cb42d0d90d88075"
 
 [[package]]
 name = "bumpalo"
