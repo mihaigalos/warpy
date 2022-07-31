@@ -18,7 +18,7 @@ repository = "https://github.com/mihaigalos/warpy"
 license = "MIT"
 
 [dependencies]
-build_html = "2.0.0"
+build_html = "2.1.1"
 chrono = "0.4.19"
 env_logger = "0.9.0"
 local_ipaddress = "0.1.3"
