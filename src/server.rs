@@ -41,7 +41,7 @@ pub async fn run(
             chrono::offset::Local::now(),
             info.path(),
             info.referer().unwrap_or("NoReferer"),
-            info.user_agent().unwrap()
+            info.user_agent().unwrap_or("NoAgent")
         );
     });
 
