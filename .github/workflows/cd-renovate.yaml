@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
 
       - uses: actions-rs/toolchain@v1
         with:
@@ -34,8 +34,17 @@ jobs:
           command: bump
           args: patch
 
+      - name: Install required dependencies
+        shell: bash
+        run: |
+          git config --global user.name "CD-Renovate Pipeline"
+          git config --global user.email "cd@renovate.none"
+          git add -u
+          git commit -m "Version bump to trigger Renovate observers downstream"
+          git push
+
       - name: Publish version to trigger Renovate PRs in dependent crates
         uses: actions-rs/cargo@v1
         with:
           command: publish
-          args: --token ${{ secrets.CARGO_API_KEY }} --allow-dirty
+          args: --token ${{ secrets.CARGO_API_KEY }}
