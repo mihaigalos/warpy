@@ -1,0 +1,41 @@
+on:
+  pull_request:
+    types:
+      - closed
+  workflow_dispatch: # Run with Run Workflow button in GitHub Action Job, set debug_enabled=true for interactive ssh session.
+    inputs:
+      manual_trigger:
+        required: false
+        default: false
+
+jobs:
+  if_merged:
+    if: github.event.pull_request.merged == true || github.event.inputs.manual_trigger
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@master
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+
+      - name: Install cargo-bump
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-bump
+
+      - name: Bump patch version
+        uses: actions-rs/cargo@v1
+        with:
+          command: bump
+          args: patch
+
+      - name: Publish version to trigger Renovate PRs in dependent crates
+        uses: actions-rs/cargo@v1
+        with:
+          command: publish
+          args: --token ${{ secrets.CARGO_API_KEY }} --allow-dirty
