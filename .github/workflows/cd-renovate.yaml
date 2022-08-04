@@ -9,7 +9,7 @@ on:
         default: false
 
 jobs:
-  if_merged:
+  cd-renovate:
     if: github.event.pull_request.merged == true || github.event.inputs.manual_trigger
     runs-on: ubuntu-latest
     steps:
@@ -34,7 +34,7 @@ jobs:
           command: bump
           args: patch
 
-      - name: Install required dependencies
+      - name: Commit and push version bump
         shell: bash
         run: |
           git config --global user.name "CD-Renovate Pipeline"
