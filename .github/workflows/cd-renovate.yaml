@@ -39,7 +39,7 @@ jobs:
       - name: Commit and push version bump
         shell: bash
         run: |
-          git config --global user.name "CD-Renovate Pipeline"
+          git config --global user.name "CD-Auto Renovate Pipeline"
           git config --global user.email "cd@renovate.none"
           git add -u
           git commit -m "Version bump to trigger Renovate observers downstream"
