@@ -1337,7 +1337,7 @@ dependencies = [
 
 [[package]]
 name = "warpy"
-version = "0.2.6"
+version = "0.2.7"
 dependencies = [
  "build_html",
  "chrono",
