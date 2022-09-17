@@ -43,6 +43,13 @@ jobs:
           git commit -m "Version bump to trigger Renovate observers downstream"
           git push
 
+      - name: Bump tag
+        shell: bash
+        run: |
+          new_version=$(grep ^version Cargo.toml | sed -e 's/.*"\(.*\)"/\1/')
+          git tag $new_version
+          git push --tags
+
       - name: Publish version to trigger Renovate PRs in dependent crates
         uses: actions-rs/cargo@v1
         with:
