@@ -23,6 +23,32 @@ jobs:
           toolchain: stable
           profile: minimal
           override: true
+          
+      - uses: extractions/setup-just@v1
+        with:
+         just-version: 0.10.2  # optional semver specification, otherwise latest
+      - name: Cargo Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
+            ${{ runner.os }}-cargo
+
+      - name: Cargo Target Cache
+        uses: actions/cache@v3
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
+            ${{ runner.os }}-cargo-target
+
+      - name: Run tests
+        run: |
+          just test
+          just test_tls
 
       - name: Install cargo-bump
         uses: actions-rs/cargo@v1
