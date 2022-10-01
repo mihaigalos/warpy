@@ -1,85 +1,9 @@
-name: CD-auto
-
 on:
   pull_request:
     types:
       - closed
-  workflow_dispatch: # Run with Run Workflow button in GitHub Action Job, set debug_enabled=true for interactive ssh session.
-    inputs:
-      manual_trigger:
-        required: false
-        default: false
 
 jobs:
-  cd-renovate:
-    if: github.event.pull_request.merged == true || github.event.inputs.manual_trigger
-    runs-on: ubuntu-latest
-    steps:
+  audit:
+    uses: mihaigalos/config/.github/workflows/rust-cd-auto.yaml@main
 
-      - uses: actions/checkout@v3
-
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          profile: minimal
-          override: true
-          
-      - uses: extractions/setup-just@v1
-        with:
-         just-version: 0.10.2  # optional semver specification, otherwise latest
-      - name: Cargo Cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
-            ${{ runner.os }}-cargo
-
-      - name: Cargo Target Cache
-        uses: actions/cache@v3
-        with:
-          path: target
-          key: ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
-            ${{ runner.os }}-cargo-target
-
-      - name: Run tests
-        run: |
-          just test
-          just test_tls
-
-      - name: Install cargo-bump
-        uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: cargo-bump
-
-      - name: Bump patch version
-        uses: actions-rs/cargo@v1
-        with:
-          command: bump
-          args: patch
-
-      - name: Commit and push version bump
-        shell: bash
-        run: |
-          git config --global user.name "CD-Auto Renovate Pipeline"
-          git config --global user.email "cd@renovate.none"
-          git add -u
-          git commit -m "Version bump to trigger Renovate observers downstream"
-          git push
-
-      - name: Bump tag
-        shell: bash
-        run: |
-          new_version=$(grep ^version Cargo.toml | sed -e 's/.*"\(.*\)"/\1/')
-          git tag $new_version
-          git push --tags
-
-      - name: Publish version to trigger Renovate PRs in dependent crates
-        uses: actions-rs/cargo@v1
-        with:
-          command: publish
-          args: --token ${{ secrets.CARGO_API_KEY }}
