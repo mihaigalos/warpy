@@ -8,4 +8,6 @@ on:
 jobs:
   audit:
     uses: mihaigalos/config/.github/workflows/rust-cd-auto.yaml@main
+    secrets:
+      CARGO_API_KEY: ${{ secrets.CARGO_API_KEY }}
 
