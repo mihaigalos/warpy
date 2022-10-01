@@ -1,3 +1,5 @@
+name: CD-auto
+
 on:
   pull_request:
     types:
