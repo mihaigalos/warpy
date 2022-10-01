@@ -11,39 +11,23 @@ on:
       - '*.md'
       - 'screenshots/**'
     branches: [ main ]
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
 
+  workflow_dispatch: # Run with Run Workflow button in GitHub Action Job, set debug_enabled=true for interactive ssh session.
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate debugging enabled (https://github.com/marketplace/actions/debugging-with-tmate)'     
+        required: false
+        default: false
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  ci:
+    uses: mihaigalos/config/.github/workflows/rust-ci.yaml@main
+    if: ${{ github.event_name == 'push' || !github.event.pull_request.draft }}
 
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - uses: extractions/setup-just@v1
-      with:
-        just-version: 0.10.2  # optional semver specification, otherwise latest
-
-    - name: Cargo Cache
-      uses: actions/cache@v3
-      with:
-        path: ~/.cargo
-        key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
-          ${{ runner.os }}-cargo
-    - name: Cargo Target Cache
-      uses: actions/cache@v3
-      with:
-        path: target
-        key: ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
-          ${{ runner.os }}-cargo-target
-    - name: Run tests
-      run: |
-        just test
-        just test_tls
