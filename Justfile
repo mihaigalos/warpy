@@ -18,7 +18,19 @@ _stop:
 build:
     cargo build
 
-test: build _start && _stop
+test:
+    #!/bin/bash
+    err() { echo -e "\e[1;31m${@}\e[0m" >&2; exit 1; }
+    ok() { echo -e "\e[1;32mOK\e[0m"; }
+    highlight() { echo -en "\e[1;37m${@}\e[0m"; }
+
+    for test in $(grep ^_test_ Justfile | cut -d':' -f1); do
+        highlight "$test "
+        just $test && true || err "Stopping."
+    done
+
+
+_test_typical: build _start && _stop
     #!/bin/bash
     err() { echo -e "\e[1;31m${@}\e[0m" >&2; exit 1; }
     ok() { echo -e "\e[1;32mOK\e[0m"; }
@@ -32,7 +44,7 @@ test: build _start && _stop
     [ "$sha_actual" = "$sha_expected" ] && ok || err "ERROR: input and output SHA256s don't match."
     popd
 
-test_tls: build _start_tls && _stop
+_test_tls: build _start_tls && _stop
     #!/bin/bash
     err() { echo -e "\e[1;31m${@}\e[0m" >&2; exit 1; }
     ok() { echo -e "\e[1;32mOK\e[0m"; }

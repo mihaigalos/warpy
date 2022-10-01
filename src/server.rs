@@ -134,12 +134,12 @@ fn links_container(folder: String, path: &Path, route: &FullPath) -> Option<Cont
     }
 
     let links_with_files = mixin_files(folder.clone(), path, links);
-    let result = mixin_folders(
+
+    mixin_folders(
         folder,
         path,
-        links_with_files.unwrap_or(Container::new(ContainerType::Div)),
-    );
-    result
+        links_with_files.unwrap_or_else(|| Container::new(ContainerType::Div)),
+    )
 }
 
 fn mixin_files(folder: String, path: &Path, mut links: Container) -> Option<Container> {
