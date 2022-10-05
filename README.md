@@ -5,7 +5,7 @@ A thin [warp](https://github.com/seanmonstar/warp) wrapper for serving folders o
 
 ![example](screenshots/warpy.png)
 
-
+![example](screenshots/qr.png)
 ## Why?
 
 Single contained lib with minimalistic CSS style to add http serving of a folder to any application.
