@@ -57,19 +57,24 @@ pub async fn run(
         false => tokio::spawn(warp::serve(routes(folder, footer, logger)).bind(socket_addr)),
     };
 
-    if has_tls {
-        println!(
-            "Serving on: https://{}:{}",
+    let url :String= if has_tls {
+        format!(
+            "https://{}:{}",
             local_ipaddress::get().unwrap(),
             port
-        );
+        )
     } else {
-        println!(
-            "Serving on: http://{}:{}",
+        format!(
+            "http://{}:{}",
             local_ipaddress::get().unwrap(),
             port
-        );
-    }
+        )
+    };
+
+    println!("Serving on: {:?}", url);
+    qr2term::print_qr(url).unwrap();
+
+    println!("\n\nLogs:");
 
     ctrl_c().await?;
     handle.abort();
