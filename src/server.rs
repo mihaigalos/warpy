@@ -149,7 +149,7 @@ fn links_container(folder: String, path: &Path, route: &FullPath) -> Option<Cont
 
 fn mixin_files(folder: String, path: &Path, mut links: Container) -> Option<Container> {
     let content_attrs = [("class", "content")];
-    let mut entries: Vec<(String, String, &'static str)> = read_dir(&path)
+    let mut entries: Vec<(String, String, &'static str)> = read_dir(path)
         .ok()?
         .filter_map(|res| res.ok().map(|x| x.path()))
         .filter_map(|path| format_path_folder(folder.clone(), path))
@@ -164,7 +164,7 @@ fn mixin_files(folder: String, path: &Path, mut links: Container) -> Option<Cont
 
 fn mixin_folders(folder: String, path: &Path, mut links: Container) -> Option<Container> {
     let content_attrs = [("class", "content")];
-    let mut entries: Vec<(String, String, &'static str)> = read_dir(&path)
+    let mut entries: Vec<(String, String, &'static str)> = read_dir(path)
         .ok()?
         .filter_map(|res| res.ok().map(|x| x.path()))
         .filter_map(|path| format_path_file(folder.clone(), path))
