@@ -7,7 +7,7 @@ on:
 
 jobs:
   cd:
-    uses: mihaigalos/config/.github/workflows/rust-cd-auto.yaml@main
+    uses: mihaigalos/workflows/.github/workflows/rust-cd-auto.yaml@main
     secrets:
       CARGO_API_KEY: ${{ secrets.CARGO_API_KEY }}
 
