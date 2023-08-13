@@ -26,7 +26,7 @@ log = "0.4.20"
 qr2term = "0.3.1"
 rcgen = "0.11.1"
 structopt = "0.3.26"
-tokio = { version = "1.30.0", features = ["macros", "rt-multi-thread", "signal"] }
+tokio = { version = "1.31.0", features = ["macros", "rt-multi-thread", "signal"] }
 warp = { version = "0.3.5", features = ["tls"] }
 
 [profile.release]
