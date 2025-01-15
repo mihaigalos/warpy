@@ -1,6 +1,6 @@
 [package]
 name = "warpy"
-version = "0.3.71"
+version = "0.3.72"
 edition = "2021"
 authors = ["Mihai Galos <mihaigalos@gmail.com>"]
 description = "🌀 A thin warp wrapper for serving folders over http."
