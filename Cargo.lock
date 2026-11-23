@@ -52,9 +52,9 @@ dependencies = [
 
 [[package]]
 name = "build_html"
-version = "2.8.0"
+version = "2.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f1829197343f1874c1979c988a5e75c2539c4645792d87494286ce2cb6dc890d"
+checksum = "8022c82c5b0493174f4cd8902f3a6a6d24bc56f3ecc048cecbc8e01f217cc916"
 
 [[package]]
 name = "bumpalo"
@@ -1173,7 +1173,7 @@ dependencies = [
 
 [[package]]
 name = "warpy"
-version = "0.3.110"
+version = "0.3.111"
 dependencies = [
  "build_html",
  "chrono",
